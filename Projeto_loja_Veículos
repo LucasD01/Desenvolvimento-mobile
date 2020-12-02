@@ -436,7 +436,7 @@ Widget myLayoutWidget() {
   return Align(
     alignment: Alignment.topCenter,
     child: Text(
-      "Meu nome é Lucas Duarte \n\nFoi realizado o desenvolvimento do aplicativo com base em uma loja de venda de veículos, onde contempla como objetivo, o cadastro de veículos na loja.",
+      "\nMeu nome é Lucas Duarte \n\nFoi realizado o desenvolvimento do aplicativo com base em uma loja de venda de veículos, onde contempla como objetivo, o cadastro de veículos na loja.",
       style: TextStyle(fontSize: 18),
     ),
   );
