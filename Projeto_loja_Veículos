@@ -246,7 +246,7 @@ class _TelaInformacoesDoVeiculo extends State<TelaInformacoesDoVeiculo> {
       lista[index]._marca = marcaController.text;
       lista[index]._modelo = modeloController.text;
       lista[index]._ano = double.parse(anoController.text);
-      lista[index]._km = double.parse(anoController.text);
+      lista[index]._km = double.parse(kmController.text);
       setState(() {});
     }
   }
