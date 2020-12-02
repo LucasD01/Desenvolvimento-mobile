@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawer: NavDrawer(lista),
       appBar: AppBar(
-        title: Text("Concessionária (${lista.length})"),
+        title: Text("Veículos (${lista.length})"),
       ), 
       body: ListView.builder(
           itemCount: lista.length,
