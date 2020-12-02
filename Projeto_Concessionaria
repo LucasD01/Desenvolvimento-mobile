@@ -1,0 +1,582 @@
+import 'package:flutter/material.dart';
+
+
+class Veiculo {
+  // Atributos
+  String _marca;
+  String _modelo;
+  int _ano;
+  int _km;
+
+  // Construtor
+  Veiculo(this._marca, this._modelo, this._ano, this._km);
+
+}
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  final List<Veiculo> lista = []; // Lista vazia
+
+  // Construtor
+  MyApp() {
+    Veiculo veiculo1 = Veiculo("Volkswagem", "Polo Hatch 1.8 16V", 2019, 85000);
+    Veiculo veiculo2 = Veiculo("Chevrolet", "Corsa Sedan 1.0 8V", 2010, 18000);
+    lista.add(veiculo1);
+    lista.add(veiculo2);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "Avalicação flutter",
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: HomePage(lista),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  final List<Veiculo> lista;
+
+  // Construtor
+  HomePage(this.lista);
+
+  @override
+  _HomePageState createState() => _HomePageState(lista);
+}
+
+class _HomePageState extends State<HomePage> {
+  final List<Veiculo> lista;
+
+  // Construtor
+  _HomePageState(this.lista);
+
+  // Métodos
+  void _atualizarTela() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    return Scaffold(
+      drawer: NavDrawer(lista),
+      appBar: AppBar(
+        title: Text("Concessionária (${lista.length})"),
+      ), 
+      body: ListView.builder(
+          itemCount: lista.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              title: Text(
+                
+                "${lista[index]._marca}:  ${lista[index]._modelo} ", 
+                style: TextStyle(fontSize: 17.0),
+              ),
+              onTap: () {},
+            );
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _atualizarTela,
+        tooltip: 'Atualizar',
+        child: Icon(Icons.update),
+      ),
+    );
+  }
+}
+
+class NavDrawer extends StatelessWidget {
+  // Atributos
+  final List lista;
+  final double _fontSize = 17.0;
+
+  // Construtor
+  NavDrawer(this.lista);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          // Opcional
+          DrawerHeader(
+            child: Text(
+              "MENU",
+              style: TextStyle(color: Colors.white, fontSize: 30),
+            ),
+            decoration: BoxDecoration(color: Colors.lightBlue),
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text(
+              "Informacoes do Veiculo",
+              style: TextStyle(fontSize: _fontSize),
+            ),
+            onTap: () {
+              Navigator.pop(context); // Fecha o Drawer
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TelaInformacoesDoVeiculo(lista),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.person_search),
+            title: Text(
+              "Buscar por um Veiculo",
+              style: TextStyle(fontSize: 17.0),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TelaBuscarPorVeiculo(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.person_add_alt_1_sharp),
+            title: Text(
+              "Cadastrar um Novo Veiculo",
+              style: TextStyle(fontSize: 17.0),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TelaCadastrarVeiculo(lista),
+                ),
+              );
+            },
+          ),
+          Container(
+            padding: EdgeInsets.all(20.0),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ListTile(
+              leading: Icon(Icons.face),
+              title: Text(
+                "Sobre",
+                style: TextStyle(fontSize: _fontSize),
+              ),
+              onTap: () => {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TelaSobre(),
+                ),
+              ),
+            },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Tela Informacoes do Veiculo
+//-----------------------------------------------------------------------------
+
+class TelaInformacoesDoVeiculo extends StatefulWidget {
+  final List<Veiculo> lista;
+
+  // Construtor
+  TelaInformacoesDoVeiculo(this.lista);
+
+  @override
+  _TelaInformacoesDoVeiculo createState() => _TelaInformacoesDoVeiculo(lista);
+}
+
+class _TelaInformacoesDoVeiculo extends State<TelaInformacoesDoVeiculo> {
+  // Atributos
+  final List lista;
+  Veiculo veiculo;
+  int index = -1;
+  double _fontSize = 18.0;
+  final marcaController = TextEditingController();
+  final modeloController = TextEditingController();
+  final anoController = TextEditingController();
+  final kmController = TextEditingController();
+  bool _edicaohabilitada = false;
+
+  // Construtor
+  _TelaInformacoesDoVeiculo(this.lista) {
+    if (lista.length > 0) {
+      index = 0;
+      veiculo = lista[0];
+      marcaController.text = veiculo._marca;
+      modeloController.text = veiculo._modelo;
+      anoController.text = veiculo._ano.toString();
+      kmController.text = veiculo._km.toString();
+    }
+  }
+
+  // Métodos
+  void _exibirRegistro(index) {
+    if (index >= 0 && index < lista.length) {
+      this.index = index;
+      veiculo = lista[index];
+      marcaController.text = veiculo._marca;
+      modeloController.text = veiculo._modelo;
+      anoController.text = veiculo._ano.toString();
+      kmController.text = veiculo._km.toString();
+      setState(() {});
+    }
+  }
+
+  void _atualizarDados() {
+    if (index >= 0 && index < lista.length) {
+      _edicaohabilitada = false;
+      lista[index]._marca = marcaController.text;
+      lista[index]._modelo = modeloController.text;
+      lista[index]._ano = double.parse(anoController.text);
+      lista[index]._km = double.parse(anoController.text);
+      setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var titulo = "Informacoes do Veículo";
+    if (veiculo == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text(titulo)),
+        body: Column(
+          children: <Widget>[
+            Text("Nenhum veículo encontrado!"),
+            Container(
+              color: Colors.blueGrey,
+              child: BackButton(),
+            ),
+          ],
+        ),
+      );
+    }
+    return Scaffold(
+      appBar: AppBar(title: Text(titulo)),
+      body: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topRight,
+              child: FloatingActionButton(
+                heroTag: null,
+                onPressed: () {
+                  _edicaohabilitada = true;
+                  setState(() {});
+                },
+                tooltip: 'Primeiro',
+                child: Text("Editar"),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: TextField(
+                enabled: _edicaohabilitada,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Marca",
+                  // hintText: "marca do veículo",
+                ),
+                style: TextStyle(fontSize: _fontSize),
+                controller: marcaController,
+              ),
+            ),
+            // --- Modelo do Veículo ---
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: TextField(
+                enabled: _edicaohabilitada,
+                 decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Modelo",
+                  // hintText: 'Modelo do veículo',
+                ),
+                style: TextStyle(fontSize: _fontSize),
+                controller: modeloController,
+              ),
+            ),
+            // --- Ano do Veiculo ---
+            Padding(
+              padding: EdgeInsets.fromLTRB(5, 5, 5, 20),
+              child: TextField(
+                enabled: _edicaohabilitada,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Ano",
+                  hintText: "Ano de fabricação (aaaa)",
+                ),
+                style: TextStyle(fontSize: _fontSize),
+                controller: anoController,
+              ),
+            ),
+            // --- KM do Veículo ---
+            Padding(
+              padding: EdgeInsets.fromLTRB(5, 5, 5, 20),
+              child: TextField(
+                enabled: _edicaohabilitada,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "KM",
+                  hintText: "Quilometragem",
+                ),
+                style: TextStyle(fontSize: _fontSize),
+                controller: kmController,
+              ),
+            ),
+            RaisedButton(
+              child: Text(
+                "Atualizar Dados",
+                style: TextStyle(fontSize: _fontSize),
+              ),
+              onPressed: _atualizarDados,
+            ),
+            Text(
+              "[${index + 1}/${lista.length}]",
+              style: TextStyle(fontSize: 15.0),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <FloatingActionButton>[
+                  FloatingActionButton(
+                    heroTag: null,
+                    onPressed: () => _exibirRegistro(0),
+                    tooltip: 'Primeiro',
+                    child: Icon(Icons.first_page),
+                  ),
+                  FloatingActionButton(
+                    heroTag: null,
+                    onPressed: () => _exibirRegistro(index - 1),
+                    tooltip: 'Primeiro',
+                    child: Icon(Icons.navigate_before),
+                  ),
+                  FloatingActionButton(
+                    heroTag: null,
+                    onPressed: () => _exibirRegistro(index + 1),
+                    tooltip: 'Primeiro',
+                    child: Icon(Icons.navigate_next),
+                  ),
+                  FloatingActionButton(
+                    heroTag: null,
+                    onPressed: () => _exibirRegistro(lista.length - 1),
+                    tooltip: 'Primeiro',
+                    child: Icon(Icons.last_page),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Tela: Buscar por Veículo
+// ----------------------------------------------------------------------------
+
+class TelaBuscarPorVeiculo extends StatefulWidget {
+  @override
+  _TelaBuscarPorVeiculoState createState() => _TelaBuscarPorVeiculoState();
+}
+
+class _TelaBuscarPorVeiculoState extends State<TelaBuscarPorVeiculo> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Buscar por Veículo")),
+    );
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Tela: Sobre
+// ----------------------------------------------------------------------------
+
+class TelaSobre extends StatefulWidget {
+  @override
+  _TelaSobreState createState() => _TelaSobreState();
+}
+
+class _TelaSobreState extends State<TelaSobre> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Sobre")),
+    body: myLayoutWidget(),
+      
+    );
+  }
+}
+
+Widget myLayoutWidget() {
+  return Align(
+    alignment: Alignment.topCenter,
+    child: Text(
+      "Meu nome é Lucas Duarte \n\nFoi realizado o desenvolvimento do aplicativo com base em uma concessionária, onde contempla como objetivo, o cadastro de veículos na loja.",
+      style: TextStyle(fontSize: 18),
+    ),
+  );
+}
+
+
+//-----------------------------------------------------------------------------
+// Tela: Cadastrar Veículo
+// ----------------------------------------------------------------------------
+
+class TelaCadastrarVeiculo extends StatefulWidget {
+  final List<Veiculo> lista;
+
+  // Construtor
+  TelaCadastrarVeiculo(this.lista);
+
+  @override
+  _TelaCadastrarVeiculoState createState() =>
+      _TelaCadastrarVeiculoState(lista);
+}
+
+class _TelaCadastrarVeiculoState extends State<TelaCadastrarVeiculo> {
+  // Atributos
+  final List<Veiculo> lista;
+  String _marca = "";
+  String _modelo = "";
+  int _ano = 0000;
+  int _km = 0000;
+  double _fontSize = 20.0;
+  final marcaController = TextEditingController();
+  final modeloController = TextEditingController();
+  final anoController = TextEditingController();
+  final kmController = TextEditingController();
+
+  // Construtor
+  _TelaCadastrarVeiculoState(this.lista);
+
+  // Métodos
+  void _cadastrarVeiculo() {
+    _marca = marcaController.text;
+    _modelo = modeloController.text;
+    _ano = int.parse(anoController.text);
+    _km = int.parse(kmController.text);
+    
+    
+    if(_ano < 2022 && _ano > 1930){
+    var veiculo = Veiculo (_marca, _modelo, _ano, _km);
+    lista.add(veiculo);
+    
+    marcaController.text = "";
+    modeloController.text = "";
+    anoController.text = "";
+    kmController.text = "";
+      
+  }
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Cadastro de Veículos"),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Text(
+                "Dados do Veiculo:",
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+            // --- Marca do Veiculo ---
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Marca",
+                  hintText: "Marca do veículo",
+                ),
+                style: TextStyle(fontSize: 20.0),
+                controller: marcaController,
+              ),
+            ),
+            // --- Modelo do Veiculo ---
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Modelo",
+                   hintText: 'Modelo do Veículo',
+                ),
+                style: TextStyle(fontSize: 20.0),
+                controller: modeloController,
+              ),
+            ),
+            // --- Ano do Veiculo ---
+            Padding(
+              padding: EdgeInsets.fromLTRB(5, 5, 5, 20),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Ano",
+                  hintText: "Ano de fabricação (aaaa)",
+                ),
+                style: TextStyle(fontSize: 20.0),
+                controller: anoController,
+              ),
+            ),
+            // --- KM do Veículo ---
+            Padding(
+              padding: EdgeInsets.fromLTRB(5, 5, 5, 20),
+              child: TextField(
+                 keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Km",
+                  hintText: "Quilometragem",
+                ),
+                style: TextStyle(fontSize: 20.0),
+                controller: kmController,
+              ),
+            ),
+            // Saída
+            RaisedButton(
+              child: Text(
+                "Cadastrar Veículo",
+                style: TextStyle(fontSize: 20.0),
+              ),
+              onPressed: _cadastrarVeiculo,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
