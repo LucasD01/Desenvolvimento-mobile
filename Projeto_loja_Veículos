@@ -117,7 +117,7 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.person),
             title: Text(
-              "Informacoes do Veiculo",
+              "Informações do Veículo",
               style: TextStyle(fontSize: _fontSize),
             ),
             onTap: () {
@@ -130,10 +130,10 @@ class NavDrawer extends StatelessWidget {
               );
             },
           ),
-          ListTile(
+          /*ListTile(
             leading: Icon(Icons.person_search),
             title: Text(
-              "Buscar por um Veiculo",
+              "Buscar por um Veículo",
               style: TextStyle(fontSize: 17.0),
             ),
             onTap: () {
@@ -145,11 +145,11 @@ class NavDrawer extends StatelessWidget {
                 ),
               );
             },
-          ),
+          ),*/
           ListTile(
             leading: Icon(Icons.person_add_alt_1_sharp),
             title: Text(
-              "Cadastrar um Novo Veiculo",
+              "Cadastrar um Novo Veículo",
               style: TextStyle(fontSize: 17.0),
             ),
             onTap: () {
@@ -241,12 +241,16 @@ class _TelaInformacoesDoVeiculo extends State<TelaInformacoesDoVeiculo> {
   }
 
   void _atualizarDados() {
-    if (index >= 0 && index < lista.length) {
+  
+    int _ano = int.parse(anoController.text);
+    int _km = int.parse(kmController.text);
+  
+    if (index >= 0 && index < lista.length && _ano < 2022 && _ano > 1930 && _km > 1  ) {
       _edicaohabilitada = false;
       lista[index]._marca = marcaController.text;
       lista[index]._modelo = modeloController.text;
-      lista[index]._ano = double.parse(anoController.text);
-      lista[index]._km = double.parse(kmController.text);
+      lista[index]._ano = int.parse(anoController.text);
+      lista[index]._km = int.parse(kmController.text);
       setState(() {});
     }
   }
@@ -398,7 +402,7 @@ class _TelaInformacoesDoVeiculo extends State<TelaInformacoesDoVeiculo> {
 // Tela: Buscar por Veículo
 // ----------------------------------------------------------------------------
 
-class TelaBuscarPorVeiculo extends StatefulWidget {
+/*class TelaBuscarPorVeiculo extends StatefulWidget {
   @override
   _TelaBuscarPorVeiculoState createState() => _TelaBuscarPorVeiculoState();
 }
@@ -410,7 +414,7 @@ class _TelaBuscarPorVeiculoState extends State<TelaBuscarPorVeiculo> {
       appBar: AppBar(title: Text("Buscar por Veículo")),
     );
   }
-}
+}*/
 
 //-----------------------------------------------------------------------------
 // Tela: Sobre
@@ -440,7 +444,7 @@ Widget myLayoutWidget() {
    padding: EdgeInsets.all(20.0),
    color: Color(0xFFB3E5FC),
    alignment: Alignment.topCenter,
-   child: Text("\nMeu nome é Lucas Duarte \n\nFoi realizado o desenvolvimento do aplicativo com base em uma loja de venda de veículos, onde contempla como objetivo, o cadastro de veículos na loja.", style: TextStyle(fontSize: 18)),
+   child: Text("\nMeu nome é Lucas Duarte \n\nFoi realizado o desenvolvimento do aplicativo com base em uma loja de venda de veículos, onde contempla como objetivo, o cadastro de veículos na loja.", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,fontFamily: 'Open Sans')),
   );
 }
 
@@ -462,6 +466,7 @@ class TelaCadastrarVeiculo extends StatefulWidget {
 class _TelaCadastrarVeiculoState extends State<TelaCadastrarVeiculo> {
   // Atributos
   final List<Veiculo> lista;
+  
   String _marca = "";
   String _modelo = "";
   int _ano = 0000;
@@ -490,11 +495,8 @@ class _TelaCadastrarVeiculoState extends State<TelaCadastrarVeiculo> {
     modeloController.text = "";
     anoController.text = "";
     kmController.text = "";
-      
-   
-    }
-      
-  }
+   }
+ }
   
   @override
   Widget build(BuildContext context) {
