@@ -1,3 +1,3 @@
-# Desenvolvimento-mobile
+<h3> Desenvolvimento-mobile</h3>
 
-Projetos Lucas Duarte
+Projeto desenvolvido em flutter na plataforma dart.dev, baseando em uma loja de veículos contendo telas de cadastro, veículos disponíveis para venda, etc.
